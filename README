@@ -1,17 +1,17 @@
-==About
+h1. About
 
 JSONClient is a super simple, low-level library for interacting with JSON services.
 JSON in the request is generated from dictionaries and JSON in the response is 
 parsed into dictionaries. 
 
-==Including in Your Project
+h1. Including in Your Project
 
 You can build JSONClient as a static library, or simply include the source code
 in your project.  If you build it as a library, include the "Headers" directory
 in your project and in the header search path for your target. If you just want
 to include the source, include the files in Source and Ext/JSON.
 
-==Usage 
+h1. Usage 
 
 You build up request using url strings and dictionaries to represent headers and
 any JSON payload.
