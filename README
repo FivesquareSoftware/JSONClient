@@ -1,0 +1,61 @@
+==About
+
+JSONClient is a super simple, low-level library for interacting with JSON services.
+JSON in the request is generated from dictionaries and JSON in the response is 
+parsed into dictionaries. 
+
+==Including in Your Project
+
+You can build JSONClient as a static library, or simply include the source code
+in your project.  If you build it as a library, include the "Headers" directory
+in your project and in the header search path for your target. If you just want
+to include the source, include the files in Source and Ext/JSON.
+
+==Usage 
+
+You build up request using url strings and dictionaries to represent headers and
+any JSON payload.
+
+NSString *path = [NSString stringWithFormat:@"/api/devices/%@",currentDevice.udid];
+JSONClient *client = [[JSONClient alloc] init];
+client.username = @"user";
+client.password = @"password";
+client.delegate = self;
+NSDictionary *payload = [NSDictionary dictionaryWithObject:myDictionary forKey:@"device"];
+NSString *urlString = [@"http://example.com" stringByAppendingPathComponent:path] 
+
+To issue a request synchonously, you use one the the simple http verb methods:
+
+JSONResponse *r = [client post:urlString]
+NSLog(@"body: %@",r.body)
+
+The above runs the request (an NSOperation subclass), waits for the operation to finish
+and returns you the response.
+
+You could also issue the request asynchronously on the client's builtin operation queue:
+
+[client queuePostRequest:urlString
+				 payload:payload 
+				 headers:nil];
+
+In this case, you would handle the callbacks like this:
+
+
+- (void) client:(JSONClient *)client finishedQueuedRequest:(JSONRequest *)request {
+
+	logDebug(@"request.response: %@",[request.response description]);
+
+	if([request.response isCreated]) {
+		// do something with a new object
+	} else if([request.response isOk]) {
+		NSLog(@"A-ok boss");
+	} else if([request.response isNotFound]) {
+		NSLog(@"We lost it");
+	}
+}
+
+
+The callbacks come in on whatever thread the operation happened to be running in, so you are 
+responsible for switching to the main thread if need be.
+
+
